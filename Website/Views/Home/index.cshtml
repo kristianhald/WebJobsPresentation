@@ -1,0 +1,32 @@
+﻿@model Shared.ReportingFile
+
+@{
+    ViewBag.Title = "Kvik Sag";
+}
+
+<div class="jumbotron">
+    <h1>Kvik Sag</h1>
+    <p class="lead">Velkommen til 'Kvik Sag'. Din verden til kvik sagsbehandling.</p>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <h2>Indberet</h2>
+        <form action="/Home/Report" id="Report" method="post">
+            <table>
+                <tr>
+                    <td>Navn: </td>
+                    <td><input type="text" name="Name" /></td>
+                </tr>
+                <tr>
+                    <td>Sagsdata: </td>
+                    <td><input type="text" name="CaseData"</td>
+                </tr>
+                <tr>
+                    <td />
+                    <td><input type="submit" value="Indberet" /></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>

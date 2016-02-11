@@ -1,0 +1,55 @@
+			Præsentation
+* Vis enkelt slide med 
+	- Hvad Webjobs er
+		| .cmd, .bat, .exe (using windows cmd)
+		| .ps1 (using powershell)
+		| .sh (using bash)
+		| .php (using php)
+		| .py (using python)
+		| .js (using node)
+		| .jar (using java)
+	- Hvilken Azure service den tilbydes via
+	- Continuously / Trigger / Scheduled
+
+
+* Gennemgå hjemmesiden og vis at den bare simpelt sender data videre på en kø
+* Vis det simple WebJob med kun service bus kø
+* Kør løsningen og se i consolen at beskeden bliver modtaget
+
+
+* Nogle gange er det bare plumbing at skulle angive BrokeredMessage og selv få typen
+* Ændre BrokeredMessage til ReportingFile og fjern linjen med 'GetBody'
+* Udover at jeg fjerner noget plumbing, så betyder det også at jeg kan unit teste metoden uden at tænke på integrationer
+
+* Fortæl lidt om hvis man kun gerne ville gemme dataene, så ville man lave en client osv
+* Tilføj følgende kode:
+	[Blob("casedata/data.txt")] out string caseData)
+
+	caseData = report.CaseData;
+* Kør og vis at der nu ligger en blob med navnet data.txt
+
+
+* Det er ikke så fedt at have hardcodet hvor dataene skal ligges henne. Hvad hvis man nu bare gerne vil gemme dataene med et navn som ligger i det input man får?
+* Udskift [Blob("casedata/data.txt")] out string caseData) med følgende:
+	string name,
+	[Blob("casedata/{Name} data.txt")] out string caseData)
+* Kør og vis at der nu ligger en blob med navnet givet fra indberetningen
+
+
+* Hvad nu hvis koden fejler af en eller anden grund og man gerne vil logge dette. Skal man så ligge fejl håndteringslogik ind i metoden?
+* WebJobs SDK bygger på extensions metodikken og tillader andre at lave extensions
+* Tilføj følgende kode og få den første metode til at kaste en fejl
+Main:
+  jobHostConfiguration.UseCore();
+Første metode:
+  throw new Exception(name);
+Ny metode:
+        public static void ErrorMonitor(
+            [ErrorTrigger()] TraceEvent error)
+        {
+            Console.WriteLine("Error: {0}", error.Exception.Message);
+        }
+* Kør koden og vis at den nye metode bliver ramt ved fejl og skriver fejlbeskeden.
+
+
+* Vis SDK koden på GitHub, hvis der er tid
